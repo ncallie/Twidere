@@ -11,17 +11,29 @@
     <form th:method="POST" th:action="@{/users/{id}(id=${user.id})}" th:object="${user}">
         <label for="username">Username:</label>
             <input id="username" type="text" th:field="*{username}" />
-        <label for="role">Role:</label>
-
-        <input id="role" type="checkbox" th:field="*{roles}" />
-
-
-
+        <br>
+        <label>Roles:
+            <input type="checkbox" name="roles"
+                   th:each="role : ${allRoles}"
+                   th:text="${role.name}"
+                   th:value="${role.name}"
+                   th:field="*{roles}"
+            />
+        </label>
         <input type="hidden" th:field="*{id}" />
         <input type="hidden" th:field="*{password}"/>
+        <input type="hidden" th:field="*{active}"/>
+        <br>
         <input type="submit" value="Добавить" />
     </form>
 </div>
-
+<hr>
+<br>
+<form th:action="@{/users}" method="get">
+    <input type="submit" value="Список пользователей"/>
+</form>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Logout"/>
+</form>
 </body>
 </html>

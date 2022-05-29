@@ -2,9 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Spring Security Example </title>
+    <title>Регистрация</title>
 </head>
 <body>
+<h1>Регистрация</h1>
 <div th:if="${param.error}">
     Invalid username and password.
 </div>
@@ -16,11 +17,11 @@
 </div>
 
 <form th:method="POST" th:action="@{/registration}" th:object="${user}">
-    <label for="username">User Name:</label>
+    <label for="username">Login:</label>
     <input id="username" type="text" th:field="*{username}" />
-    <label for="password">Tag:</label>
+    <label for="password">Password:</label>
     <input id="password" type="text" th:field="*{password}" />
-    <input type="submit" value="Добавить" />
+    <input type="submit" value="Зарегистрироваться" />
 </form>
 
 </body>

@@ -3,25 +3,18 @@
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
 <div>
     <H1>Добавить сообщение</H1>
-    <form th:method="POST" th:action="@{/messages}" th:object="${message}">
+    <form th:method="POST" th:action="@{/messages}" th:object="${message}" enctype="multipart/form-data">
         <label for="text">Текст сообщения:</label>
             <input id="text" type="text" th:field="*{text}" />
         <label for="tag">Tag:</label>
             <input id="tag" type="text" th:field="*{tag}" />
-        <input type="submit" value="Добавить" />
-    </form>
-</div>
-
-<div>
-    <H1>Фильтр</H1>
-    <form th:method="GET" th:action="@{/messages}">
-        <label for="filter">Tag:</label>
-            <input id="filter" type="text" name="filter"/>
+        <input type="file" name="file">
         <input type="submit" value="Добавить" />
     </form>
 </div>
@@ -29,16 +22,38 @@
 
 <div>
     <H1>Список сообщений</H1>
-    <div th:th:unless="${messages.empty}" th:each="message : ${messages}" >
-        <b th:text="${message.id}">Id</b>
-        <span th:text="${message.text}">Text</span>
-        <i th:text="${message.tag}"></i>
-        <strong th:text="${message.author.username}">Author</strong>
-    </div>
-</div>
+        <form th:method="GET" th:action="@{/messages}">
+            <label for="filter">Найти по tag</label>
+            <input id="filter" type="text" name="filter"/>
+            <input type="submit" value="Поиск" />
+        </form>
 
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Text</th>
+            <th>Tag</th>
+            <th>Author</th>
+            <th>Img</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:unless="${messages.empty}" th:each="message : ${messages}">
+            <td align="center" th:text="${message.id}"></td>
+            <td align="center"><span th:text="${message.text}"></span></td>
+            <td align="center"><i th:text="${message.tag}"></i></td>
+            <td align="center" th:text="${message.author.username}"></td>
+            <br>
+            <td th:if="${message.filename}"> <img width="150" height="100" th:src="@{${'/img/' + message.filename}}" > </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+<br>
 <form th:action="@{/logout}" method="post">
-    <input type="submit" value="Sign Out"/>
+    <input type="submit" value="Logout"/>
 </form>
 
 </body>

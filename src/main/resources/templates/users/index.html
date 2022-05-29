@@ -9,25 +9,34 @@
 </head>
 <body>
 
-
-<div th:th:unless="${users.empty}" th:each="user : ${users}">
+<h1>Список пользователей</h1>
+<div>
     <table>
         <thead>
         <tr>
             <th>Name</th>
             <th>Role</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td th:text="${user.username}"> Name </td>
+        <tr th:th:unless="${users.empty}" th:each="user : ${users}">
+            <td  th:text="${user.username}"> Name </td>
             <th:block th:each="role : ${user.roles}">
-                <td th:text="${role}"> Role </td>
+                <td  th:text="${role}"> Role </td>
             </th:block>
-            <td><a th:href="@{/users/{id}(id=${user.id})}">Edit</a></td>
+            <td  ><a th:href="@{/users/{id}(id=${user.id})}">Edit</a></td>
         </tr>
         </tbody>
     </table>
 </div>
+<hr>
+<br>
+<form th:action="@{/messages}" method="get">
+    <input type="submit" value="Список сообщений"/>
+</form>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Logout"/>
+</form>
 </body>
 </html>
