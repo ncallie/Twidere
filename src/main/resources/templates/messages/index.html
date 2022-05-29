@@ -1,12 +1,40 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Twider</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Домой</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" sec:authorize="hasAnyAuthority('ADMIN', 'USER')" href="/messages">Сообщения</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" sec:authorize="hasAuthority('ADMIN')" href="/users">Список пользователей</a>
+                </li>
+            </ul>
+            <div class="navbar-text" sec:authentication="name">
+                <div sec:authentication="principal.authorities"></div>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container mt-5">
 <div>
     <H1>Добавить сообщение</H1>
     <form th:method="POST" th:action="@{/messages}" th:object="${message}" enctype="multipart/form-data">
@@ -18,8 +46,7 @@
         <input type="submit" value="Добавить" />
     </form>
 </div>
-
-
+<br>
 <div>
     <H1>Список сообщений</H1>
         <form th:method="GET" th:action="@{/messages}">
@@ -27,7 +54,6 @@
             <input id="filter" type="text" name="filter"/>
             <input type="submit" value="Поиск" />
         </form>
-
     <table>
         <thead>
         <tr>
@@ -44,7 +70,6 @@
             <td align="center"><span th:text="${message.text}"></span></td>
             <td align="center"><i th:text="${message.tag}"></i></td>
             <td align="center" th:text="${message.author.username}"></td>
-            <br>
             <td th:if="${message.filename}"> <img width="150" height="100" th:src="@{${'/img/' + message.filename}}" > </td>
         </tr>
         </tbody>
@@ -55,6 +80,6 @@
 <form th:action="@{/logout}" method="post">
     <input type="submit" value="Logout"/>
 </form>
-
+</div>>
 </body>
 </html>
