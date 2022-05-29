@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div>
+    <H1>Добавить сообщение</H1>
+    <form th:method="POST" th:action="@{/users/{id}(id=${user.id})}" th:object="${user}">
+        <label for="username">Username:</label>
+            <input id="username" type="text" th:field="*{username}" />
+        <label for="role">Role:</label>
+
+        <input id="role" type="checkbox" th:field="*{roles}" />
+
+
+
+        <input type="hidden" th:field="*{id}" />
+        <input type="hidden" th:field="*{password}"/>
+        <input type="submit" value="Добавить" />
+    </form>
+</div>
+
+</body>
+</html>
