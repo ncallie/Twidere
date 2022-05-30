@@ -6,6 +6,7 @@ Web-приложение с возможность создания постов
 
 ## Стэк
 - Spring(MVC, Boot, Security)
+- Thymeleaf
 - Hibernate
 - Repository
 - Lombok
