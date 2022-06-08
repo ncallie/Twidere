@@ -16,7 +16,6 @@ import ru.ncallie.Twidere.services.UserService;
 @RequestMapping("/registration")
 public class AuthController {
     private UserService userService;
-    private UserRepository userRepository;
 
     @Autowired
     public AuthController(UserService userService) {

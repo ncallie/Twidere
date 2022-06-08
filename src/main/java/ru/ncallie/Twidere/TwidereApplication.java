@@ -8,5 +8,4 @@ public class TwidereApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TwidereApplication.class, args);
 	}
-
 }
