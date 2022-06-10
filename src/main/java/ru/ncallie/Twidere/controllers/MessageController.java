@@ -72,8 +72,9 @@ public class MessageController {
         return "redirect:/messages";
     }
 
-//    @DeleteMapping("/{id}")
-//    public String delMessage(@PathVariable("id") Integer id) {
-//
-//    }
+    @DeleteMapping("/{id}")
+    public String delMessage(@PathVariable("id") Integer id) {
+        messageService.delete(id);
+        return "redirect:/messages";
+    }
 }

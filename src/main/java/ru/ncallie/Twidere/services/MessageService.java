@@ -28,4 +28,8 @@ public class MessageService {
     public List<Message> filter(String tag) {
         return messageRepository.findByTag(tag);
     }
+
+    public void delete(Integer id) {
+        messageRepository.deleteById(id);
+    }
 }
