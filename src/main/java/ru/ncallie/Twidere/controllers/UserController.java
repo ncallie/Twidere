@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +11,7 @@ import ru.ncallie.Twidere.Exception.UserExistsException;
 import ru.ncallie.Twidere.models.Role;
 import ru.ncallie.Twidere.models.User;
 import ru.ncallie.Twidere.services.UserService;
-
 import java.util.Arrays;
-import java.util.List;
 
 @Controller
 @RequestMapping("/users")
@@ -22,8 +19,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
@@ -71,5 +66,28 @@ public class UserController {
             return "users/profile";
         }
         return "redirect:/users/profile";
+    }
+
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @GetMapping("/profile/{username}")
+    public String publicPageProfile(@PathVariable("username") String username, Model model, @AuthenticationPrincipal User authUser) {
+        User oneByUsername = userService.getOneByUsername(username);
+        model.addAttribute("messages", oneByUsername.getMessages());
+        model.addAttribute("user", oneByUsername);
+        model.addAttribute("isSubscriber", oneByUsername.getSubscribers().contains(authUser));
+        model.addAttribute("isAnotherPage", (!username.equals(authUser.getUsername())));
+        return "users/publicProfile";
+    }
+
+    @GetMapping("/profile/{username}/sub")
+    public String subscribe(@PathVariable("username") String username, @AuthenticationPrincipal User authUser) {
+        userService.subscribe(authUser,username);
+        return "redirect:/users/profile/" + username;
+    }
+
+    @GetMapping("/profile/{username}/unsub")
+    public String unsubscribe(@PathVariable("username") String username, @AuthenticationPrincipal User authUser) {
+        userService.unsubscribe(authUser, username);
+        return "redirect:/users/profile/" + username;
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.ncallie.Twidere.Exception.UserExistsException;
 import ru.ncallie.Twidere.models.User;
-import ru.ncallie.Twidere.repositories.UserRepository;
 import ru.ncallie.Twidere.services.UserService;
 
 @Controller

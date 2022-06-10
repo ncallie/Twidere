@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.ncallie.Twidere.models.Message;
 import ru.ncallie.Twidere.models.User;
 import ru.ncallie.Twidere.services.MessageService;
+import ru.ncallie.Twidere.services.UserService;
 
 import javax.validation.Valid;
 import java.io.File;
@@ -24,13 +25,15 @@ import java.util.UUID;
 @RequestMapping("/messages")
 public class MessageController {
     private final MessageService messageService;
+    private final UserService userService;
 
     @Value("${upload.path}")
     private String uploadPath;
 
     @Autowired
-    public MessageController(MessageService messageService) {
+    public MessageController(MessageService messageService, UserService userService) {
         this.messageService = messageService;
+        this.userService = userService;
     }
 
     @GetMapping()
@@ -68,4 +71,9 @@ public class MessageController {
         messageService.save(message);
         return "redirect:/messages";
     }
+
+//    @DeleteMapping("/{id}")
+//    public String delMessage(@PathVariable("id") Integer id) {
+//
+//    }
 }

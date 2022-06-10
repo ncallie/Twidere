@@ -1,5 +1,6 @@
 package ru.ncallie.Twidere.services;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,8 +12,10 @@ import ru.ncallie.Twidere.models.Role;
 import ru.ncallie.Twidere.models.User;
 import ru.ncallie.Twidere.repositories.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -40,6 +43,11 @@ public class UserService implements UserDetailsService {
             }
         }
         throw new UserExistsException("Username already exists!");
+    }
+
+    public User getOneByUsername(String username) {
+        User byUsername = userRepository.findByUsername(username);
+        return byUsername;
     }
 
     @Override
@@ -82,10 +90,27 @@ public class UserService implements UserDetailsService {
 
         if (userFromDB == null || userFromDB.getId().equals(authUser.getId())) {
             authUser.setEmail(userForm.getEmail());
-            authUser.setPassword(passwordEncoder.encode(userForm.getPassword()));
+            if (!authUser.getPassword().equals(userForm.getPassword()))
+                authUser.setPassword(passwordEncoder.encode(userForm.getPassword()));
             userRepository.save(authUser);
         }
         else
             throw new UserExistsException("Email already exists!");
+    }
+
+    public void subscribe(User authUser, String usernameProfile) {
+        User byUsername = userRepository.findByUsername(usernameProfile);
+        if (!authUser.equals(byUsername)) {
+            byUsername.getSubscribers().add(authUser);
+            userRepository.save(byUsername);
+        }
+    }
+
+    public void unsubscribe(User authUser, String usernameProfile) {
+        User byUsername = userRepository.findByUsername(usernameProfile);
+        if (!authUser.equals(byUsername)) {
+            byUsername.getSubscribers().remove(authUser);
+            userRepository.save(byUsername);
+        }
     }
 }

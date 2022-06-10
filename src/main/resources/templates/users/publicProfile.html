@@ -48,43 +48,41 @@
 </nav>
 
 <div class="container mt-5">
-    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-       aria-controls="collapseExample">
-        Добавить новое сообщение
-    </a>
-    <form th:method="POST" class="collapse" id="collapseExample" th:action="@{/messages}" th:object="${message}"
-          enctype="multipart/form-data">
-        <div class="p-1">
-            <label for="text" class="form-label"></label>
-            <textarea class="form-control" id="text" th:field="*{text}" rows="2" placeholder="Сообщение"></textarea>
+    <h2 th:text="${'Страница пользователя, ' + user.username}">Username
+    </h2>
+    <div th:if="${isAnotherPage}">
+        <div th:if="${isSubscriber}">
+            <a class="btn btn-outline-danger" th:href="@{/users/profile/{username}/unsub(username=${user.username})}" role="button">Unsubscribe</a>
         </div>
-        <div class="p-1">
-            <label for="tag" class="form-label"></label>
-            <input type="text" class="form-control" id="tag" th:field="*{tag}" placeholder="Tag">
+        <div th:unless="${isSubscriber}">
+            <a class="btn btn-outline-primary" th:href="@{/users/profile/{username}/sub(username=${user.username})}" role="button">Subscribe</a>
         </div>
-        <div class="p-1">
-            <label for="file" class="form-label"></label>
-            <input class="form-control form-control-sm" id="file" type="file" name="file">
-        </div>
-        <div style="color: red" class="col-auto" th:if="${#fields.hasErrors()}">
-            Invalid username and password.
-        </div>
-        <div class="p-1">
-            <button type="submit" class="btn btn-primary">Отправить</button>
-        </div>
-    </form>
-    <div class="p-1">
-        <form th:method="GET" th:action="@{/messages}">
-            <div class="input-group mb-3">
-                <input class="form-control" id="filter" type="text" name="filter" placeholder="Поиск по tag">
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-outline-secondary">Поиск</button>
-                </div>
-            </div>
-        </form>
     </div>
-
-
+    <br>
+    <div class="row-cols-1 row-cols-md-3 g-4">
+        <ol class="list-group list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div th:if="${user.email == null}">
+                    <div class="fw-bold">Email</div>
+                    <div class="ms-2"> Не указан</div>
+                </div>
+                <div th:unless="${user.email == null}">
+                    <div class="fw-bold">Email</div>
+                    <div class="ms-2" th:text="${user.email}"> Email</div>
+                </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="fw-bold">Подписчики</div>
+                <div class="ms-2" th:text="${user.subscribers.size()}">Кол-во</div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="fw-bold">Подписки</div>
+                <div class="ms-2" th:text="${user.subscriptions.size()}">Кол-во</div>
+            </li>
+        </ol>
+    </div>
+    <br>
+    <h3>Список сообщений</h3>
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col" th:unless="${messages.empty}" th:each="message : ${messages}">
             <div class="card h-100">
@@ -93,12 +91,6 @@
                     <h5 class="card-title" th:text="${message.text}">Card title</h5>
                 </div>
                 <div class="card-footer">
-                    <small class="text-muted">
-                        <strong>
-                            <a th:href="@{/users/profile/{id}(id = ${message.author.username})}"
-                               th:text="${message.author.username}" class="card-link">Card link</a>
-                        </strong>
-                    </small>
                     <small class="text-muted"> <i th:text="${message.tag}">Tag</i> </small>
                 </div>
             </div>
