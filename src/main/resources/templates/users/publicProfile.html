@@ -23,10 +23,6 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" sec:authorize="hasAnyAuthority('USER')"
-                       href="/users/profile">Профиль</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link active" aria-current="page" sec:authorize="hasAnyAuthority('ADMIN', 'USER')"
                        href="/messages">Сообщения</a>
                 </li>
@@ -52,10 +48,12 @@
     </h2>
     <div th:if="${isAnotherPage}">
         <div th:if="${isSubscriber}">
-            <a class="btn btn-outline-danger" th:href="@{/users/profile/{username}/unsub(username=${user.username})}" role="button">Unsubscribe</a>
+            <a class="btn btn-outline-danger" th:href="@{/users/profile/{username}/unsub(username=${user.username})}"
+               role="button">Unsubscribe</a>
         </div>
         <div th:unless="${isSubscriber}">
-            <a class="btn btn-outline-primary" th:href="@{/users/profile/{username}/sub(username=${user.username})}" role="button">Subscribe</a>
+            <a class="btn btn-outline-primary" th:href="@{/users/profile/{username}/sub(username=${user.username})}"
+               role="button">Subscribe</a>
         </div>
     </div>
     <br>
@@ -72,11 +70,19 @@
                 </div>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-start">
-                <div class="fw-bold">Подписчики</div>
+                <div class="fw-bold">
+                    <a th:href="@{/users/profile/{username}/subscribers(username=${user.username})}">
+                        Подписчики
+                    </a>
+                </div>
                 <div class="ms-2" th:text="${user.subscribers.size()}">Кол-во</div>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-start">
-                <div class="fw-bold">Подписки</div>
+                <div class="fw-bold">
+                    <a th:href="@{/users/profile/{username}/subscriptions(username=${user.username})}">
+                        Подписки
+                    </a>
+                </div>
                 <div class="ms-2" th:text="${user.subscriptions.size()}">Кол-во</div>
             </li>
         </ol>

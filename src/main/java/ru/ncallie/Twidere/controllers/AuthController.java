@@ -1,6 +1,7 @@
 package ru.ncallie.Twidere.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,12 +23,13 @@ public class AuthController {
     }
 
     @GetMapping()
-    public String registration(@ModelAttribute("user")User user) {
+    @PreAuthorize("isAnonymous()")
+    public String registration(@ModelAttribute("user") User user) {
         return "auth/registration";
     }
 
     @PostMapping()
-    public String create(@ModelAttribute("user")User user, Model model) {
+    public String create(@ModelAttribute("user") User user, Model model) {
         try {
             userService.save(user);
         } catch (UserExistsException e) {

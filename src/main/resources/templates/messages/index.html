@@ -23,17 +23,14 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" sec:authorize="hasAnyAuthority('USER')"
-                       href="/users/profile">Профиль</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" sec:authorize="hasAnyAuthority('ADMIN', 'USER')"
-                       href="/messages">Сообщения</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link active" aria-current="page" sec:authorize="hasAuthority('ADMIN')" href="/users">Список
                         пользователей</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" sec:authorize="hasAnyAuthority('ADMIN', 'USER')"
+                       th:href="@{/users/profile/{username}(username=${user.username})}">Профиль</a>
+                </li>
+
             </ul>
             <div class="me-2" sec:authentication="name">
                 <div sec:authentication="principal.authorities">Username</div>
@@ -100,14 +97,17 @@
                         </strong>
                     </small>
                     <small class="text-muted"> <i th:text="${message.tag}">Tag</i> </small>
-                    <form class="d-grid gap-2 d-md-flex justify-content-md-end" th:method="delete" th:action="@{/messages/{id}(id=${message.id})}">
-                        <button style="color: red" type="submit" name="submit" value="value" class="btn btn-link">Delete</button>
+                    <form class="d-grid gap-2 d-md-flex justify-content-md-end"
+                          th:if="${#authorization.expression('hasAuthority(''ADMIN'')') or user.id == message.author.id}"
+                          th:method="delete" th:action="@{/messages/{id}(id=${message.id})}">
+                        <button style="color: red" type="submit" name="submit" value="value" class="btn btn-link">
+                            Delete
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 </body>
 </html>

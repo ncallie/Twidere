@@ -11,6 +11,7 @@ import ru.ncallie.Twidere.Exception.UserExistsException;
 import ru.ncallie.Twidere.models.Role;
 import ru.ncallie.Twidere.models.User;
 import ru.ncallie.Twidere.services.UserService;
+
 import java.util.Arrays;
 
 @Controller
@@ -37,10 +38,10 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{id}")
-    public String update(@ModelAttribute("user")User user, Model model) {
+    public String update(@ModelAttribute("user") User user, Model model) {
         try {
             userService.update(user);
-        }catch (UserExistsException e) {
+        } catch (UserExistsException e) {
             model.addAttribute("allRoles", (Arrays.stream(Role.values()).toList()));
             model.addAttribute("exc", e.getMessage());
             return "users/edit";
@@ -79,15 +80,42 @@ public class UserController {
         return "users/publicProfile";
     }
 
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/profile/{username}/sub")
     public String subscribe(@PathVariable("username") String username, @AuthenticationPrincipal User authUser) {
-        userService.subscribe(authUser,username);
+        userService.subscribe(authUser, username);
         return "redirect:/users/profile/" + username;
     }
 
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/profile/{username}/unsub")
     public String unsubscribe(@PathVariable("username") String username, @AuthenticationPrincipal User authUser) {
         userService.unsubscribe(authUser, username);
         return "redirect:/users/profile/" + username;
+    }
+
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @GetMapping("/profile/{username}/subscribers")
+    public String subscribersPage(@PathVariable("username") String username, Model model) {
+        User oneByUsername = userService.getOneByUsername(username);
+        model.addAttribute("subs", oneByUsername.getSubscribers());
+        model.addAttribute("name", "Подписчики, " + username);
+        return "users/subList";
+    }
+
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @GetMapping("/profile/{username}/subscriptions")
+    public String subscriptionsPage(@PathVariable("username") String username, Model model) {
+        User oneByUsername = userService.getOneByUsername(username);
+        model.addAttribute("subs", oneByUsername.getSubscriptions());
+        model.addAttribute("name", "Подписки, " + username);
+        return "users/subList";
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable("id") Integer id) {
+        userService.delete(id);
+        return "redirect:/users";
     }
 }

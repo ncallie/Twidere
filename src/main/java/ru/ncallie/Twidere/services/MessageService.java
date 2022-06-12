@@ -2,10 +2,13 @@ package ru.ncallie.Twidere.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.ncallie.Twidere.models.Role;
+import ru.ncallie.Twidere.models.User;
 import ru.ncallie.Twidere.repositories.MessageRepository;
 import ru.ncallie.Twidere.models.Message;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MessageService {
@@ -29,7 +32,9 @@ public class MessageService {
         return messageRepository.findByTag(tag);
     }
 
-    public void delete(Integer id) {
-        messageRepository.deleteById(id);
+    public void delete(Integer id, User user) {
+        Message message = messageRepository.findById(id).get();
+        if (message.getAuthor().getId().equals(user.getId()) || user.getRoles().contains(Role.ADMIN))
+            messageRepository.deleteById(id);
     }
 }

@@ -37,8 +37,8 @@ public class MessageController {
     }
 
     @GetMapping()
-    public String index(Model model, @ModelAttribute("message")Message message,
-                        @RequestParam(value = "filter", required = false, defaultValue = "") String filter) {
+    public String index(Model model, @ModelAttribute("message") Message message,
+                        @RequestParam(value = "filter", required = false, defaultValue = "") String filter, @AuthenticationPrincipal User user) {
         List<Message> all = messageService.getAll();
         if (!all.isEmpty())
             Collections.reverse(all);
@@ -46,6 +46,7 @@ public class MessageController {
             model.addAttribute("messages", all);
         else
             model.addAttribute("messages", messageService.filter(filter));
+        model.addAttribute("user", user);
         return "messages/index";
     }
 
@@ -73,8 +74,8 @@ public class MessageController {
     }
 
     @DeleteMapping("/{id}")
-    public String delMessage(@PathVariable("id") Integer id) {
-        messageService.delete(id);
+    public String delMessage(@PathVariable("id") Integer id, @AuthenticationPrincipal User user) {
+        messageService.delete(id, user);
         return "redirect:/messages";
     }
 }

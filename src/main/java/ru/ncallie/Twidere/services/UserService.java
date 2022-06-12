@@ -113,4 +113,8 @@ public class UserService implements UserDetailsService {
             userRepository.save(byUsername);
         }
     }
+
+    public void delete(Integer id) {
+        userRepository.deleteById(id);
+    }
 }

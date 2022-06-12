@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
+    <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-    <title>Home page</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
@@ -22,12 +23,6 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" sec:authorize="isAnonymous()" href="/registration">Регистрация</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" sec:authorize="isAnonymous()" href="/login">Войти</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link active" aria-current="page" sec:authorize="hasAnyAuthority('ADMIN', 'USER')"
                        href="/messages">Сообщения</a>
                 </li>
@@ -35,33 +30,30 @@
                     <a class="nav-link active" aria-current="page" sec:authorize="hasAuthority('ADMIN')" href="/users">Список
                         пользователей</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" sec:authorize="hasAnyAuthority('ADMIN', 'USER')"
-                       th:href="@{/users/profile/{username}(username=${user.username})}">Профиль</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" sec:authorize="hasAnyAuthority('ADMIN', 'USER')"
-                       href="/users/profile">Изменить данные</a>
-                </li>
             </ul>
+            <div class="me-2" sec:authentication="name">
+                <div sec:authentication="principal.authorities">Username</div>
+            </div>
+            <div>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-primary" type="submit" value="Logout">Logout</button>
+                </form>
+            </div>
         </div>
-        <div class="me-2" sec:authentication="name">
-            <div sec:authentication="principal.authorities">Username</div>
-        </div>
-        <div sec:authorize="isAuthenticated()">
-            <form th:action="@{/logout}" method="post">
-                <button class="btn btn-primary" type="submit" value="Logout">Logout</button>
-            </form>
-        </div>
-    </div>
     </div>
 </nav>
+
 <div class="container mt-5">
-    <figure class="text-center display-6">
-        <blockquote class="display-6">
-            <p>Сервис публикации сообщений</p>
-        </blockquote>
-    </figure>
+    <h1 th:text="${name}">Title </h1>
+    <div class="row-cols-1 row-cols-md-3 g-4">
+        <ol class="list-group list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-start" th:each="sub : ${subs}">
+                <a th:href="@{/users/profile/{username}(username=${sub.username})}">
+                    <div class="ms-2" th:text="${sub.username}">username</div>
+                </a>
+            </li>
+        </ol>
+    </div>
 </div>
 </body>
 </html>
