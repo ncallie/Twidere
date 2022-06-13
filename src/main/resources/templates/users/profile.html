@@ -52,15 +52,18 @@
     <form th:method="POST" th:action="@{/users/profile}" th:object="${user}">
         <div class="col-auto">
             <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" th:field="*{password}" Text>
+            <input type="password" class="form-control" id="password" th:field="*{password}">
+            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
             <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="email" th:field="*{email}">
+            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
+            <div class="alert alert-danger" role="alert" th:if="${exc}" th:text="${exc}">Email error</div>
+        </div>
+        <div>
+            <input type="hidden" th:field="*{username}">
         </div>
         <button type="submit" class="btn btn-primary">Обновить</button>
     </form>
-    <div style="color: red" class="col-auto" th:if="${exc}">
-        <span th:text="${exc}">Exception</span>
-    </div>
 </div>
 </body>
 </html>

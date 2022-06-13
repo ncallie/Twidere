@@ -53,18 +53,17 @@
           enctype="multipart/form-data">
         <div class="p-1">
             <label for="text" class="form-label"></label>
-            <textarea class="form-control" id="text" th:field="*{text}" rows="2" placeholder="Сообщение"></textarea>
+            <textarea class="form-control" id="text" th:field="*{text}" rows="2"
+                      placeholder="Введите сообщение длинной от 3 до 1024 символов"></textarea>
         </div>
         <div class="p-1">
             <label for="tag" class="form-label"></label>
-            <input type="text" class="form-control" id="tag" th:field="*{tag}" placeholder="Tag">
+            <input type="text" class="form-control" id="tag" th:field="*{tag}"
+                   placeholder="Введите тэг длинной от 3 до 20 символов">
         </div>
         <div class="p-1">
             <label for="file" class="form-label"></label>
             <input class="form-control form-control-sm" id="file" type="file" name="file">
-        </div>
-        <div style="color: red" class="col-auto" th:if="${#fields.hasErrors()}">
-            Invalid username and password.
         </div>
         <div class="p-1">
             <button type="submit" class="btn btn-primary">Отправить</button>
@@ -81,9 +80,8 @@
         </form>
     </div>
 
-
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col" th:unless="${messages.empty}" th:each="message : ${messages}">
+        <div class="col" th:each="message : ${messages}">
             <div class="card h-100">
                 <img th:if="${message.filename}" th:src="@{${'/img/' + message.filename}}" class="card-img-top">
                 <div class="card-body">

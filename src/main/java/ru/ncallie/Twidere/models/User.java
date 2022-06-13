@@ -7,6 +7,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.*;
 
 @Entity
@@ -17,9 +21,18 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @Size(min = 5, max = 20,  message = "Username должен быть длинной от 5 до 20 символов")
+    @NotEmpty(message = "Username не должен быть пустым")
     private String username;
+
+    @Size(min = 6, message = "Пароль должен быть длинной от 8 символов")
+    @NotEmpty(message = "Пароль не должен быть пустым")
     private String password;
+
+    @Email(message = "Некорректный email")
+    @NotEmpty(message = "Email не должен быть пустым")
     private String email;
+
     private boolean active;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)

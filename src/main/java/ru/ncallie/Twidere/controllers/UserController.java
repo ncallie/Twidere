@@ -1,17 +1,18 @@
 package ru.ncallie.Twidere.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.ncallie.Twidere.Exception.UserExistsException;
+import ru.ncallie.Twidere.Exception.UserException;
 import ru.ncallie.Twidere.models.Role;
 import ru.ncallie.Twidere.models.User;
 import ru.ncallie.Twidere.services.UserService;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 
 @Controller
@@ -30,7 +31,7 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{id}")
-    public String editPage(@PathVariable("id") User user, Model model) {
+    public String editPage(@PathVariable("id")  User user, Model model) {
         model.addAttribute("allRoles", (Arrays.stream(Role.values()).toList()));
         model.addAttribute("user", user);
         return "users/edit";
@@ -38,10 +39,15 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{id}")
-    public String update(@ModelAttribute("user") User user, Model model) {
+    public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("allRoles", (Arrays.stream(Role.values()).toList()));
+            return "users/edit";
+        }
+
         try {
             userService.update(user);
-        } catch (UserExistsException e) {
+        } catch (UserException e) {
             model.addAttribute("allRoles", (Arrays.stream(Role.values()).toList()));
             model.addAttribute("exc", e.getMessage());
             return "users/edit";
@@ -58,11 +64,13 @@ public class UserController {
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @PostMapping("/profile")
-    public String updateProfile(@ModelAttribute("user") User userForm,
+    public String updateProfile(@ModelAttribute("user") @Valid User userForm, BindingResult bindingResult,
                                 @AuthenticationPrincipal User authUser, Model model) {
+        if (bindingResult.hasErrors())
+            return "users/profile";
         try {
             userService.updateProfile(userForm, authUser);
-        } catch (UserExistsException e) {
+        } catch (UserException e) {
             model.addAttribute("exc", e.getMessage());
             return "users/profile";
         }

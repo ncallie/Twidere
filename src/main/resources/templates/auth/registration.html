@@ -45,20 +45,17 @@
         <div class="col-auto">
             <label for="username" class="form-label">Login</label>
             <input type="text" class="form-control" id="username" th:field="*{username}">
+            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</div>
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password" th:field="*{password}">
+            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" th:field="*{email}">
+            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
+            <div class="alert alert-danger" role="alert" th:if="${exc}" th:text="${exc}">Email error</div>
         </div>
         <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
     </form>
-    <div style="color: red" class="col-auto" th:if="${param.error}">
-        Invalid username and password.
-    </div>
-    <div style="color: red" class="col-auto" th:if="${exc}">
-        Username already exists!
-    </div>
-    <div style="color: red" class="col-auto" th:if="${param.logout}">
-        You have been logged out.
-    </div>
 </div>
 
 

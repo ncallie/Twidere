@@ -41,25 +41,21 @@
 </nav>
 
 <div class="container mt-5">
+    <div class="alert alert-danger" role="alert" th:if="${param.logout}">You have been logged out.</div>
     <form th:action="@{/login}" th:method="POST">
         <div class="col-auto">
             <label for="username" class="form-label">Login</label>
             <input type="text" class="form-control" id="username" name="username">
         </div>
-
         <div class="col-auto">
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password" name="password">
         </div>
+        <div class="alert alert-danger" role="alert" th:if="${param.error}">Invalid username or password.</div>
         <button type="submit" class="btn btn-primary">Войти</button>
     </form>
-    <div style="color: red" class="col-auto" th:if="${param.error}">
-        Invalid username and password.
-    </div>
-    <div style="color: red" class="col-auto" th:if="${param.logout}">
-        You have been logged out.
-    </div>
 </div>
+
 
 
 </body>

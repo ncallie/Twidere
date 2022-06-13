@@ -38,7 +38,8 @@ public class MessageController {
 
     @GetMapping()
     public String index(Model model, @ModelAttribute("message") Message message,
-                        @RequestParam(value = "filter", required = false, defaultValue = "") String filter, @AuthenticationPrincipal User user) {
+                        @RequestParam(value = "filter", required = false, defaultValue = "") String filter,
+                        @AuthenticationPrincipal User user) {
         List<Message> all = messageService.getAll();
         if (!all.isEmpty())
             Collections.reverse(all);
