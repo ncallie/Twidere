@@ -11,3 +11,4 @@ Web-приложение с возможность создания постов
 - Repository
 - Lombok
 - Bootstrap
+- FlyWay
